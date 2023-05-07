@@ -1,6 +1,8 @@
 pub mod base64;
-pub mod bcrypt;
-pub mod utils;
+pub(crate) mod bcrypt;
+pub(crate) mod utils;
+
+pub use bcrypt::*;
 
 pub static GENSALT_DEFAULT_LOG2_ROUNDS: u8 = 10;
 pub static BCRYPT_SALT_LEN: u8 = 16;
@@ -184,7 +186,7 @@ mod tests {
 
     #[test]
     fn hashpw_test() {
-        let hash = bcrypt::BCrypt::hashpw(
+        let hash = BCrypt::hashpw(
             "test123".to_owned(),
             "$2a$05$8gFKWI2Y5OYxRCMMMtveLO".to_owned(),
         )
@@ -198,40 +200,40 @@ mod tests {
 
     #[test]
     fn checkpw_test() {
-        let hash = bcrypt::BCrypt::hashpw(
+        let hash = BCrypt::hashpw(
             "test123".to_owned(),
             "$2a$05$8gFKWI2Y5OYxRCMMMtveLO".to_owned(),
         )
         .unwrap();
 
-        assert!(bcrypt::BCrypt::checkpw("test123".to_owned(), hash))
+        assert!(BCrypt::checkpw("test123".to_owned(), hash))
     }
 
     #[test]
     fn checkpw_failure_test() {
-        let hash = bcrypt::BCrypt::hashpw(
+        let hash = BCrypt::hashpw(
             "test123".to_owned(),
             "$2a$05$8gFKWI2Y5OYxRCMMMtveLO".to_owned(),
         )
         .unwrap();
 
-        assert_eq!(bcrypt::BCrypt::checkpw("test1234".to_owned(), hash), false)
+        assert_eq!(BCrypt::checkpw("test1234".to_owned(), hash), false)
     }
 
     #[test]
     fn gensalt_test() {
-        let salt = bcrypt::BCrypt::gensalt(5).unwrap();
-        let hash1 = bcrypt::BCrypt::hashpw("testingagain".to_owned(), salt.clone()).unwrap();
-        let hash2 = bcrypt::BCrypt::hashpw("testingagain".to_owned(), salt).unwrap();
+        let salt = BCrypt::gensalt(5).unwrap();
+        let hash1 = BCrypt::hashpw("testingagain".to_owned(), salt.clone()).unwrap();
+        let hash2 = BCrypt::hashpw("testingagain".to_owned(), salt).unwrap();
 
         assert_eq!(hash1, hash2);
     }
 
     #[test]
     fn allmethods_test() {
-        let salt = bcrypt::BCrypt::gensalt(5).unwrap();
-        let hash = bcrypt::BCrypt::hashpw("testingagain".to_owned(), salt).unwrap();
-        let check = bcrypt::BCrypt::checkpw("testingagain".to_owned(), hash);
+        let salt = BCrypt::gensalt(5).unwrap();
+        let hash = BCrypt::hashpw("testingagain".to_owned(), salt).unwrap();
+        let check = BCrypt::checkpw("testingagain".to_owned(), hash);
 
         assert!(check);
     }
