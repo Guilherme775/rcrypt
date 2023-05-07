@@ -70,12 +70,25 @@ pub fn decode_base64<'a>(s: String, maxlen: usize) -> Result<Vec<isize>, &'a str
     let mut c4;
     let mut o;
 
-    // TODO: remove unsafe blocks here
     while off < slen - 1 && olen < maxlen {
-        // TODO: remove this unwrap
-        c1 = char64(s.chars().nth(off).unwrap());
+        match s.chars().nth(off) {
+            Some(x) => c1 = char64(x),
+            None => {
+                let err = format!("Invalid input: {}", s);
+
+                return Err(Box::leak(err.into_boxed_str()));
+            }
+        }
         off += 1;
-        c2 = char64(s.chars().nth(off).unwrap());
+
+        match s.chars().nth(off) {
+            Some(x) => c2 = char64(x),
+            None => {
+                let err = format!("Invalid input: {}", s);
+
+                return Err(Box::leak(err.into_boxed_str()));
+            }
+        }
         off += 1;
 
         if c1 == -1 || c2 == -1 {
@@ -85,8 +98,13 @@ pub fn decode_base64<'a>(s: String, maxlen: usize) -> Result<Vec<isize>, &'a str
         o = get_byte_from_number(c1 << 2);
         o |= (c2 & 0x30) >> 4;
 
-        unsafe {
-            rs.push(char::from_u32_unchecked(o as u32));
+        match char::from_u32(o as u8 as u32) {
+            Some(x) => rs.push(x),
+            None => {
+                let err = format!("Invalid byte: {}", o);
+
+                return Err(Box::leak(err.into_boxed_str()));
+            }
         }
 
         olen += 1;
@@ -94,7 +112,14 @@ pub fn decode_base64<'a>(s: String, maxlen: usize) -> Result<Vec<isize>, &'a str
             break;
         }
 
-        c3 = char64(s.chars().nth(off).unwrap());
+        match s.chars().nth(off) {
+            Some(x) => c3 = char64(x),
+            None => {
+                let err = format!("Invalid input: {}", s);
+
+                return Err(Box::leak(err.into_boxed_str()));
+            }
+        }
         off += 1;
 
         if c3 == -1 {
@@ -104,8 +129,13 @@ pub fn decode_base64<'a>(s: String, maxlen: usize) -> Result<Vec<isize>, &'a str
         o = get_byte_from_number((c2 & 0x0f) << 4);
         o |= (c3 & 0x3c) >> 2;
 
-        unsafe {
-            rs.push(char::from_u32_unchecked(o as u32));
+        match char::from_u32(o as u8 as u32) {
+            Some(x) => rs.push(x),
+            None => {
+                let err = format!("Invalid byte: {}", o);
+
+                return Err(Box::leak(err.into_boxed_str()));
+            }
         }
 
         olen += 1;
@@ -113,14 +143,26 @@ pub fn decode_base64<'a>(s: String, maxlen: usize) -> Result<Vec<isize>, &'a str
             break;
         }
 
-        c4 = char64(s.chars().nth(off).unwrap());
+        match s.chars().nth(off) {
+            Some(x) => c4 = char64(x),
+            None => {
+                let err = format!("Invalid input: {}", s);
+
+                return Err(Box::leak(err.into_boxed_str()));
+            }
+        }
         off += 1;
 
         o = get_byte_from_number((c3 & 0x03) << 6);
         o |= c4;
 
-        unsafe {
-            rs.push(char::from_u32_unchecked(o as u32));
+        match char::from_u32(o as u8 as u32) {
+            Some(x) => rs.push(x),
+            None => {
+                let err = format!("Invalid byte: {}", o);
+
+                return Err(Box::leak(err.into_boxed_str()));
+            }
         }
 
         olen += 1;
@@ -131,7 +173,14 @@ pub fn decode_base64<'a>(s: String, maxlen: usize) -> Result<Vec<isize>, &'a str
     off = 0;
 
     while off < olen {
-        ret.push(get_byte_from_char(rs.chars().nth(off).unwrap()));
+        match rs.chars().nth(off) {
+            Some(x) => ret.push(get_byte_from_char(x)),
+            None => {
+                let err = format!("Invalid result: {}", rs);
+
+                return Err(Box::leak(err.into_boxed_str()));
+            }
+        }
 
         off += 1;
     }
