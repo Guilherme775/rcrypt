@@ -4,7 +4,6 @@ use crate::{
     BCRYPT_SALT_LEN, BF_CRYPT_CIPHERTEXT, BLOWFISH_NUM_ROUNDS, P_ORIG, S_ORIG,
 };
 
-#[warn(dead_code)]
 #[allow(non_snake_case)]
 pub struct BCrypt {
     pub P: Vec<isize>,

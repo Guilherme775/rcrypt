@@ -1,9 +1,13 @@
 [package]
-name = "rcrypt"
+name = "mini-rcrypt"
 version = "0.1.0"
 edition = "2021"
-description = "Rust implementation of OpenBSD's Blowfish password hashing code."
+description = "A minimal Rust implementation of OpenBSD Blowfish password hashing code."
 license = "MIT"
+homepage = "https://github.com/Guilherme775/rcrypt"
+repository = "https://github.com/Guilherme775/rcrypt"
+categories = ["cryptography", "algorithms", "security"]
+keywords = ["bcrypt", "hash", "salt", "base64"]
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
