@@ -1,8 +1,11 @@
-use crate::{BASE64_CODE, INDEX_64};
+use crate::{
+    utils::{char64, get_byte_from_char, get_byte_from_number},
+    BASE64_CODE,
+};
 
-pub fn encode_base64(value: Vec<isize>, len: usize) -> Result<String, String> {
+pub fn encode_base64<'a>(value: Vec<isize>, len: usize) -> Result<String, &'a str> {
     if len <= 0 || len > value.len() {
-        return Err("Invalid len".into());
+        return Err("Invalid len");
     }
 
     let mut off = 0;
@@ -51,37 +54,9 @@ pub fn encode_base64(value: Vec<isize>, len: usize) -> Result<String, String> {
     Ok(rs)
 }
 
-pub fn char64(x: char) -> isize {
-    let code = x as isize;
-
-    if code < 0 || code as usize > INDEX_64.len() {
-        return -1;
-    }
-
-    return INDEX_64[code as usize] as isize;
-}
-
-pub fn get_byte_from_char(c: char) -> isize {
-    let b = c as isize;
-
-    if b > 127 {
-        return -128 + (b % 128);
-    } else {
-        return b;
-    }
-}
-
-pub fn get_byte_from_number(b: isize) -> isize {
-    if b > 127 {
-        return -128 + (b % 128);
-    } else {
-        return b;
-    }
-}
-
-pub fn decode_base64(s: String, maxlen: usize) -> Result<Vec<isize>, String> {
+pub fn decode_base64<'a>(s: String, maxlen: usize) -> Result<Vec<isize>, &'a str> {
     if maxlen <= 0 {
-        return Err("Invalid maxlen".into());
+        return Err("Invalid maxlen");
     }
 
     let mut rs = String::new();
