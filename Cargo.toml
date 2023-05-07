@@ -1,6 +1,6 @@
 [package]
 name = "mini-rcrypt"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2021"
 description = "A minimal Rust implementation of OpenBSD Blowfish password hashing code."
 license = "MIT"
